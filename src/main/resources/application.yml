@@ -1,0 +1,37 @@
+logging:
+  level:
+    es.gortizlavado.league.app: DEBUG
+
+spring:
+  application:
+    name: market-microservice
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 30
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        default_schema: ${spring.application.name}
+        globally_quoted_identifiers: true
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations:
+      - classpath:db/migration/postgresql
+    schemas: ${spring.application.name}
+    init-sqls: CREATE SCHEMA IF NOT EXISTS "${spring.application.name}";
+    user: sa
+    password:
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 20000
+
+server:
+  port: 8082
