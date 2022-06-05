@@ -5,6 +5,7 @@ import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.models.BidJoin;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -31,11 +33,12 @@ public class BidRepositoryTest {
     BidRepository bidRepository;
 
     @Test
+    @FlywayTest
     void shouldBeOneRecord_whenPutPlayerInSale() {
         var newSale = Sale.builder()
-                .idPlayer(27L)
-                .idUserOwner(20L)
-                .idCommunity(1L)
+                .idPlayer(UUID.randomUUID())
+                .idUserOwner(UUID.randomUUID())
+                .idCommunity(UUID.randomUUID())
                 .season("2021/2022")
                 .bidAmount(BigDecimal.TEN)
                 .status(TransactionStatus.PENDING)
@@ -47,11 +50,16 @@ public class BidRepositoryTest {
     }
 
     @Test
+    @FlywayTest
     void shouldGetBid_whenUserRequestForPlayerBidStatus() {
+
+        final UUID idPlayer = UUID.randomUUID();
+        final UUID idUserOwner = UUID.randomUUID();
+        final UUID idCommunity = UUID.randomUUID();
         var newSale = Sale.builder()
-                .idPlayer(27L)
-                .idUserOwner(20L)
-                .idCommunity(1L)
+                .idPlayer(idPlayer)
+                .idUserOwner(idUserOwner)
+                .idCommunity(idCommunity)
                 .season("2021/2022")
                 .bidAmount(BigDecimal.TEN)
                 .status(TransactionStatus.PENDING)
@@ -60,44 +68,53 @@ public class BidRepositoryTest {
         saleRepository.save(newSale);
         Assertions.assertEquals(1, saleRepository.count());
 
-        final Optional<Sale> saleFounded = saleRepository.findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(27L, 20L, 1L, "2021/2022");
+        final Optional<Sale> saleFounded = saleRepository.findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(idPlayer, idUserOwner, idCommunity, "2021/2022");
         Assertions.assertTrue(saleFounded.isPresent());
         final Sale sale = saleFounded.get();
+        Assertions.assertNotNull(sale.getCreatedAt());
+        Assertions.assertNull(sale.getUpdated_at());
 
+        final UUID idUserBid = UUID.randomUUID();
         sale.addBid(Bid.builder()
-                .idUserBid(12L)
+                .idUserBid(idUserBid)
                 .amount(BigDecimal.ONE)
                 .status(TransactionStatus.PENDING)
                 .createdAt(LocalDateTime.now()).build());
         saleRepository.save(sale);
 
         Assertions.assertEquals(1, bidRepository.count());
-        final Optional<Sale> saleFoundedAgain = saleRepository.findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(27L, 20L, 1L, "2021/2022");
-        Assertions.assertEquals(1, saleFoundedAgain.get().getBids().size());
+        final Optional<Sale> saleFoundedAgain = saleRepository.findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(idPlayer, idUserOwner, idCommunity, "2021/2022");
+        Assertions.assertEquals(1, saleFoundedAgain.orElseThrow().getBids().size());
 
-        final Optional<BidJoin> optionalBid = bidRepository.findByPlayerIdAndIdUserBidAndCommunityAndSeason(27L, 12L, 1L, "2021/2022");
+        final Optional<BidJoin> optionalBid = bidRepository.findByPlayerIdAndIdUserBidAndCommunityAndSeason(idPlayer, idUserBid, idCommunity, "2021/2022");
         Assertions.assertTrue(optionalBid.isPresent());
     }
 
     @Test
+    @FlywayTest
     void shouldGetListOfBids_whenUserRequestAllBidsStatus() {
+
+        final UUID idUserOwner = UUID.randomUUID();
+        final UUID idCommunity = UUID.randomUUID();
         var newSaleOne = Sale.builder()
-                .idPlayer(25L)
-                .idUserOwner(20L)
-                .idCommunity(1L)
+                .idPlayer(UUID.randomUUID())
+                .idUserOwner(idUserOwner)
+                .idCommunity(idCommunity)
                 .season("2021/2022")
                 .bidAmount(BigDecimal.TEN)
                 .status(TransactionStatus.PENDING)
                 .createdAt(LocalDate.now()).build();
 
+        final UUID idUserBid1 = UUID.randomUUID();
+        final UUID idUserBid2 = UUID.randomUUID();
         final Set<Bid> bidSetOne = Set.of(
                 Bid.builder()
-                        .idUserBid(12L)
+                        .idUserBid(idUserBid1)
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now()).build(),
                 Bid.builder()
-                        .idUserBid(13L)
+                        .idUserBid(idUserBid2)
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now().plusMinutes(3L)).build());
@@ -105,10 +122,11 @@ public class BidRepositoryTest {
             newSaleOne.addBid(bid);
         }
 
+        final UUID idCommunity2 = UUID.randomUUID();
         var newSaleTwo = Sale.builder()
-                .idPlayer(15L)
-                .idUserOwner(2L)
-                .idCommunity(1L)
+                .idPlayer(UUID.randomUUID())
+                .idUserOwner(idCommunity2)
+                .idCommunity(idCommunity)
                 .season("2021/2022")
                 .bidAmount(BigDecimal.TEN)
                 .status(TransactionStatus.PENDING)
@@ -116,23 +134,23 @@ public class BidRepositoryTest {
 
         final Set<Bid> bidSetTwo = Set.of(
                 Bid.builder()
-                        .idUserBid(12L)
+                        .idUserBid(idUserBid1)
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now()).build(),
                 Bid.builder()
-                        .idUserBid(13L)
+                        .idUserBid(idUserBid2)
                         .amount(BigDecimal.ONE)
-                        .status(TransactionStatus.PENDING)
+                        .status(TransactionStatus.REJECTED)
                         .createdAt(LocalDateTime.now().plusMinutes(3L)).build());
         for (Bid bid : bidSetTwo) {
             newSaleTwo.addBid(bid);
         }
 
         var newSaleThree = Sale.builder()
-                .idPlayer(55L)
-                .idUserOwner(20L)
-                .idCommunity(2L)
+                .idPlayer(UUID.randomUUID())
+                .idUserOwner(idUserOwner)
+                .idCommunity(idCommunity2)
                 .season("2021/2022")
                 .bidAmount(BigDecimal.TEN)
                 .status(TransactionStatus.PENDING)
@@ -140,12 +158,12 @@ public class BidRepositoryTest {
 
         final Set<Bid> bidSetThree = Set.of(
                 Bid.builder()
-                        .idUserBid(2L)
+                        .idUserBid(UUID.randomUUID())
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now()).build(),
                 Bid.builder()
-                        .idUserBid(3L)
+                        .idUserBid(UUID.randomUUID())
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now().plusMinutes(3L)).build());
@@ -155,10 +173,14 @@ public class BidRepositoryTest {
         saleRepository.saveAll(List.of(newSaleOne, newSaleTwo, newSaleThree));
 
         Assertions.assertEquals(6, ((List<Bid>) bidRepository.findAll()).size());
-        Assertions.assertEquals(2, bidRepository.findByIdUserBidAndCommunityAndSeason(12L, 1L, "2021/2022").size());
 
-        Assertions.assertEquals(2, bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(12L, 1L, "2021/2022", TransactionStatus.PENDING).size());
-        Assertions.assertEquals(0, bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(12L, 1L, "2021/2022", TransactionStatus.REJECTED).size());
+        Assertions.assertEquals(2, bidRepository.findByIdUserBidAndCommunityAndSeason(idUserBid1, idCommunity, "2021/2022").size());
+        Assertions.assertEquals(2, bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(idUserBid1, idCommunity, "2021/2022", TransactionStatus.PENDING).size());
+        Assertions.assertEquals(0, bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(idUserBid1, idCommunity, "2021/2022", TransactionStatus.REJECTED).size());
+
+        Assertions.assertEquals(2, bidRepository.findByIdUserBidAndCommunityAndSeason(idUserBid2, idCommunity, "2021/2022").size());
+        Assertions.assertEquals(1, bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(idUserBid2, idCommunity, "2021/2022", TransactionStatus.PENDING).size());
+        Assertions.assertEquals(1, bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(idUserBid2, idCommunity, "2021/2022", TransactionStatus.REJECTED).size());
     }
 
 }

@@ -3,8 +3,12 @@ package es.gonzo.springboot.league.app.entity;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,15 +23,20 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "sales")
+@Table(name = "sale")
 public class Sale {
 
     @Id
@@ -35,13 +44,13 @@ public class Sale {
     private Long id;
 
     @Column(name = "player_id")
-    private Long idPlayer;
+    private UUID idPlayer;
 
     @Column(name = "user_owner_id")
-    private Long idUserOwner;
+    private UUID idUserOwner;
 
     @Column(name = "community_id")
-    private Long idCommunity;
+    private UUID idCommunity;
 
     @Column(name = "season_id")
     private String season;
@@ -50,14 +59,20 @@ public class Sale {
     private BigDecimal bidAmount;
 
     @Column(name = "transaction_status")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private TransactionStatus status;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bid> bids;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDate createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updated_at;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deleted_at;
 
     public void addBid(Bid bid) {
         if (null == this.bids) {
@@ -70,5 +85,18 @@ public class Sale {
     public void removeBid(Bid bid) {
         this.bids.remove(bid);
         bid.setSale(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Sale sale = (Sale) o;
+        return id != null && Objects.equals(id, sale.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -18,9 +18,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -28,7 +29,7 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "bids")
+@Table(name = "bid")
 public class Bid {
 
     @Id
@@ -36,27 +37,33 @@ public class Bid {
     private Long id;
 
     @Column(name = "user_bid_id")
-    private Long idUserBid;
+    private UUID idUserBid;
 
     @Column(name = "bid_amount")
     private BigDecimal amount;
 
     @Column(name = "bid_status")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private TransactionStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Sale sale;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updated_at;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deleted_at;
 
     public void addSale(Sale sale) {
         this.sale = sale;
         sale.addBid(this);
     }
 
-    // auto-generated toString throw a StackOverflowError, so I generated toString.
+    // toString throw a StackOverflowError, so I generated toString.
     @Override
     public String toString() {
         return "Bid{" +
@@ -65,6 +72,8 @@ public class Bid {
                 ", amount=" + amount +
                 ", status=" + status +
                 ", createdAt=" + createdAt +
+                ", updated_at=" + updated_at +
+                ", deleted_at=" + deleted_at +
                 '}';
     }
 
