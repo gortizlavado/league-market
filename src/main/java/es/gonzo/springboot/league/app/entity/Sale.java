@@ -19,15 +19,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "sales")
+@Table(name = "sale")
 public class Sale {
 
     @Id
@@ -35,13 +37,13 @@ public class Sale {
     private Long id;
 
     @Column(name = "player_id")
-    private Long idPlayer;
+    private UUID idPlayer;
 
     @Column(name = "user_owner_id")
-    private Long idUserOwner;
+    private UUID idUserOwner;
 
     @Column(name = "community_id")
-    private Long idCommunity;
+    private UUID idCommunity;
 
     @Column(name = "season_id")
     private String season;
@@ -58,6 +60,12 @@ public class Sale {
 
     @Column(name = "created_at")
     private LocalDate createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updated_at;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deleted_at;
 
     public void addBid(Bid bid) {
         if (null == this.bids) {

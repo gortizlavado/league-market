@@ -4,14 +4,15 @@ import es.gonzo.springboot.league.app.models.BidJoin;
 
 import java.math.BigDecimal;
 import java.util.Set;
+import java.util.UUID;
 
 public interface BidService {
 
-    BidJoin fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(Long idPlayer, Long idUserBid, Long idCommunity, String seasonId);
+    BidJoin fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(UUID idPlayer, UUID idUserBid, UUID idCommunity, String seasonId);
 
-    Set<BidJoin> fetchBidListByIdUserBidAndCommunityAndSeason(Long idUserBid, Long idCommunity, String seasonId);
+    Set<BidJoin> fetchBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId);
 
-    Set<BidJoin> fetchPendingBidListByIdUserBidAndCommunityAndSeason(Long idUserBid, Long idCommunity, String seasonId);
+    Set<BidJoin> fetchPendingBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId);
 
-    void createBidBy(Long idSale, Long idUserBid, BigDecimal amount);
+    void createBidBy(Long idSale, UUID idUserBid, BigDecimal amount);
 }

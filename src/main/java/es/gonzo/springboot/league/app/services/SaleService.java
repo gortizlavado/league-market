@@ -3,15 +3,16 @@ package es.gonzo.springboot.league.app.services;
 import es.gonzo.springboot.league.app.entity.Sale;
 
 import java.util.Set;
+import java.util.UUID;
 
 public interface SaleService {
 
-    Sale fetchSaleByPlayerIdAndIdOwnerAndCommunityAndSeason(Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId);
+    Sale fetchSaleByPlayerIdAndIdOwnerAndCommunityAndSeason(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId);
 
-    Set<Sale> fetchSaleListByIdOwnerAndCommunityAndSeason(Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId);
+    Set<Sale> fetchSaleListByIdOwnerAndCommunityAndSeason(UUID idUserOwner, UUID idCommunity, String seasonId);
 
-    Set<Sale> fetchPendingSaleListByIdOwnerAndCommunityAndSeason(Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId);
+    Set<Sale> fetchPendingSaleListByIdOwnerAndCommunityAndSeason(UUID idUserOwner, UUID idCommunity, String seasonId);
 
-    void acceptOneBidForPlayerFromUserSale(Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId, Long idUserBid);
+    void acceptOneBidForPlayerFromUserSale(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId, UUID idUserBid);
 
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -15,15 +16,15 @@ public class BidJoin {
 
     private Long id;
 
-    private Long idUserBid;
+    private UUID idUserBid;
 
     private BigDecimal amount;
 
     private TransactionStatus status;
 
-    private Long idPlayer;
+    private UUID idPlayer;
 
-    private Long idCommunity;
+    private UUID idCommunity;
 
     private String season;
 

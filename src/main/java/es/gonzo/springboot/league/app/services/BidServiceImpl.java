@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,24 +27,24 @@ public class BidServiceImpl implements BidService {
     private final SaleRepository saleRepository;
 
     @Override
-    public BidJoin fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(Long idPlayer, Long idUserBid, Long idCommunity, String seasonId) {
+    public BidJoin fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(UUID idPlayer, UUID idUserBid, UUID idCommunity, String seasonId) {
         return bidRepository.findByPlayerIdAndIdUserBidAndCommunityAndSeason(idPlayer, idUserBid, idCommunity, seasonId)
                 .orElseThrow(() -> new BidNotFoundException(idPlayer, idUserBid, idCommunity, seasonId));
     }
 
     @Override
-    public Set<BidJoin> fetchBidListByIdUserBidAndCommunityAndSeason(Long idUserBid, Long idCommunity, String seasonId) {
+    public Set<BidJoin> fetchBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId) {
         return bidRepository.findByIdUserBidAndCommunityAndSeason(idUserBid, idCommunity, seasonId);
     }
 
     @Override
-    public Set<BidJoin> fetchPendingBidListByIdUserBidAndCommunityAndSeason(Long idUserBid, Long idCommunity, String seasonId) {
+    public Set<BidJoin> fetchPendingBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId) {
         return bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(idUserBid, idCommunity, seasonId, TransactionStatus.PENDING);
     }
 
     @Override
     @Transactional
-    public void createBidBy(Long idSale, Long idUserBid, BigDecimal amount) {
+    public void createBidBy(Long idSale, UUID idUserBid, BigDecimal amount) {
         final Sale sale = saleRepository.findById(idSale).orElseThrow(() -> new SaleNotFoundException(idSale));
         final Bid newBid = Bid.builder()
                 .idUserBid(idUserBid)

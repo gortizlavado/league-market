@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -33,11 +34,13 @@ class BidServiceIntegrationTest {
     @Test
     void shouldSaveBid_whenExistOneSale() {
 
-        final long idPlayer = 27L, idUserBid = 4L, idCommunity = 6L;
+        final UUID idPlayer = UUID.randomUUID();
+        final UUID idUserBid = UUID.randomUUID();
+        final UUID idCommunity = UUID.randomUUID();
         final String season = "2021/2022";
         var newSale = Sale.builder()
                 .idPlayer(idPlayer)
-                .idUserOwner(99L)
+                .idUserOwner(UUID.randomUUID())
                 .idCommunity(idCommunity)
                 .season(season)
                 .bidAmount(BigDecimal.TEN)

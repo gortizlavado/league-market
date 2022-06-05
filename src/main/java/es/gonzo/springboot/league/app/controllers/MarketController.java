@@ -25,4 +25,6 @@ public class MarketController {
     public PlayerDTO getPlayerInfo(@PathVariable String id) {
         return PlayerDTO.builder().build();//saleService.getPlayerInfo(id);
     }
+
+    //TODO use soft delete
 }

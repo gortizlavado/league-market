@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Sale fetchSaleByPlayerIdAndIdOwnerAndCommunityAndSeason(
-            Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId) {
+            UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId) {
         return saleRepository
                 .findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(
                         idPlayer, idUserOwner, idCommunity, seasonId)
@@ -29,19 +30,19 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Set<Sale> fetchSaleListByIdOwnerAndCommunityAndSeason(
-            Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId) {
+            UUID idUserOwner, UUID idCommunity, String seasonId) {
         return saleRepository.findByIdUserOwnerAndIdCommunityAndSeason(idUserOwner, idCommunity, seasonId);
     }
 
     @Override
     public Set<Sale> fetchPendingSaleListByIdOwnerAndCommunityAndSeason(
-            Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId) {
+            UUID idUserOwner, UUID idCommunity, String seasonId) {
         return saleRepository.findByIdUserOwnerAndIdCommunityAndSeasonAndStatus(idUserOwner, idCommunity, seasonId, TransactionStatus.PENDING);
     }
 
     @Transactional
     @Override
-    public void acceptOneBidForPlayerFromUserSale(Long idPlayer, Long idUserOwner, Long idCommunity, String seasonId, Long idUserBid) {
+    public void acceptOneBidForPlayerFromUserSale(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId, UUID idUserBid) {
         final Sale sale = this.fetchSaleByPlayerIdAndIdOwnerAndCommunityAndSeason(idPlayer, idUserOwner, idCommunity, seasonId);
         sale.setStatus(TransactionStatus.ACCEPTED);
         sale.getBids().forEach(bid -> {

@@ -8,16 +8,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Repository
 public interface SaleRepository extends CrudRepository<Sale, Long> {
 
     @Transactional(readOnly = true)
-    Optional<Sale> findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(Long idPlayer, Long idUserOwner, Long idCommunity, String season);
+    Optional<Sale> findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String season);
 
     @Transactional(readOnly = true)
-    Set<Sale> findByIdUserOwnerAndIdCommunityAndSeason(Long idUserOwner, Long idCommunity, String season);
+    Set<Sale> findByIdUserOwnerAndIdCommunityAndSeason(UUID idUserOwner, UUID idCommunity, String season);
 
     @Transactional(readOnly = true)
-    Set<Sale> findByIdUserOwnerAndIdCommunityAndSeasonAndStatus(Long idUserOwner, Long idCommunity, String season, TransactionStatus status);
+    Set<Sale> findByIdUserOwnerAndIdCommunityAndSeasonAndStatus(UUID idUserOwner, UUID idCommunity, String season, TransactionStatus status);
 }

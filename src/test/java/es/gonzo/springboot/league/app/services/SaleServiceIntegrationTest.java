@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -30,26 +31,30 @@ class SaleServiceIntegrationTest {
 
     @Test
     void shouldBeOneBidAccepted_whenUserAcceptSaleForOnePlayer() {
-        final long userWin = 4L, idPlayer = 27L, idUserOwner = 2L, idCommunity = 10L;
+
+        final UUID idPlayer = UUID.randomUUID();
+        final UUID idUserOwner = UUID.randomUUID();
+        final UUID idUserBidWin = UUID.randomUUID();
+        final UUID idCommunity = UUID.randomUUID();
         final String seasonId = "2021/2022";
         final Set<Bid> bidSet = Set.of(
                 Bid.builder()
-                        .idUserBid(3L)
+                        .idUserBid(UUID.randomUUID())
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now()).build(),
                 Bid.builder()
-                        .idUserBid(userWin)
+                        .idUserBid(idUserBidWin)
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now()).build(),
                 Bid.builder()
-                        .idUserBid(5L)
+                        .idUserBid(UUID.randomUUID())
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now()).build(),
                 Bid.builder()
-                        .idUserBid(6L)
+                        .idUserBid(UUID.randomUUID())
                         .amount(BigDecimal.ONE)
                         .status(TransactionStatus.PENDING)
                         .createdAt(LocalDateTime.now().plusMinutes(3L)).build());
@@ -66,10 +71,10 @@ class SaleServiceIntegrationTest {
         }
         saleRepository.save(newSale);
 
-        service.acceptOneBidForPlayerFromUserSale(idPlayer, idUserOwner, idCommunity, seasonId, userWin);
+        service.acceptOneBidForPlayerFromUserSale(idPlayer, idUserOwner, idCommunity, seasonId, idUserBidWin);
 
-        Assertions.assertEquals(0, service.fetchPendingSaleListByIdOwnerAndCommunityAndSeason(idPlayer, idUserOwner, idCommunity, seasonId).size());
-        final Set<Sale> sales = service.fetchSaleListByIdOwnerAndCommunityAndSeason(idPlayer, idUserOwner, idCommunity, seasonId);
+        Assertions.assertEquals(0, service.fetchPendingSaleListByIdOwnerAndCommunityAndSeason(idUserOwner, idCommunity, seasonId).size());
+        final Set<Sale> sales = service.fetchSaleListByIdOwnerAndCommunityAndSeason(idUserOwner, idCommunity, seasonId);
         final long acceptedBids = sales.stream()
                 .map(Sale::getBids)
                 .flatMap(bids -> bids.stream().map(Bid::getStatus))
