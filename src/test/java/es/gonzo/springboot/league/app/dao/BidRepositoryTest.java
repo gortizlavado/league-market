@@ -5,6 +5,7 @@ import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.models.BidJoin;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,7 @@ public class BidRepositoryTest {
     BidRepository bidRepository;
 
     @Test
+    @FlywayTest
     void shouldBeOneRecord_whenPutPlayerInSale() {
         var newSale = Sale.builder()
                 .idPlayer(UUID.randomUUID())
@@ -48,6 +50,7 @@ public class BidRepositoryTest {
     }
 
     @Test
+    @FlywayTest
     void shouldGetBid_whenUserRequestForPlayerBidStatus() {
 
         final UUID idPlayer = UUID.randomUUID();
@@ -81,13 +84,14 @@ public class BidRepositoryTest {
 
         Assertions.assertEquals(1, bidRepository.count());
         final Optional<Sale> saleFoundedAgain = saleRepository.findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(idPlayer, idUserOwner, idCommunity, "2021/2022");
-        Assertions.assertEquals(1, saleFoundedAgain.get().getBids().size());
+        Assertions.assertEquals(1, saleFoundedAgain.orElseThrow().getBids().size());
 
         final Optional<BidJoin> optionalBid = bidRepository.findByPlayerIdAndIdUserBidAndCommunityAndSeason(idPlayer, idUserBid, idCommunity, "2021/2022");
         Assertions.assertTrue(optionalBid.isPresent());
     }
 
     @Test
+    @FlywayTest
     void shouldGetListOfBids_whenUserRequestAllBidsStatus() {
 
         final UUID idUserOwner = UUID.randomUUID();

@@ -1,4 +1,4 @@
-package es.gonzo.springboot.league.app.services;
+package es.gonzo.springboot.league.app.services.implementation;
 
 import es.gonzo.springboot.league.app.dao.BidRepository;
 import es.gonzo.springboot.league.app.dao.SaleRepository;
@@ -8,11 +8,12 @@ import es.gonzo.springboot.league.app.exceptions.BidNotFoundException;
 import es.gonzo.springboot.league.app.exceptions.SaleNotFoundException;
 import es.gonzo.springboot.league.app.models.BidJoin;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
+import es.gonzo.springboot.league.app.services.BidService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -27,17 +28,20 @@ public class BidServiceImpl implements BidService {
     private final SaleRepository saleRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public BidJoin fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(UUID idPlayer, UUID idUserBid, UUID idCommunity, String seasonId) {
         return bidRepository.findByPlayerIdAndIdUserBidAndCommunityAndSeason(idPlayer, idUserBid, idCommunity, seasonId)
                 .orElseThrow(() -> new BidNotFoundException(idPlayer, idUserBid, idCommunity, seasonId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<BidJoin> fetchBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId) {
         return bidRepository.findByIdUserBidAndCommunityAndSeason(idUserBid, idCommunity, seasonId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<BidJoin> fetchPendingBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId) {
         return bidRepository.findByIdUserBidAndIdCommunityAndSeasonAndStatus(idUserBid, idCommunity, seasonId, TransactionStatus.PENDING);
     }

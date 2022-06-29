@@ -3,8 +3,12 @@ package es.gonzo.springboot.league.app.entity;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,13 +25,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "sale")
 public class Sale {
@@ -58,7 +65,7 @@ public class Sale {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bid> bids;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDate createdAt;
 
     @Column(name = "updated_at")
@@ -78,5 +85,18 @@ public class Sale {
     public void removeBid(Bid bid) {
         this.bids.remove(bid);
         bid.setSale(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Sale sale = (Sale) o;
+        return id != null && Objects.equals(id, sale.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

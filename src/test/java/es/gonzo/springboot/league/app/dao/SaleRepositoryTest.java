@@ -4,12 +4,16 @@ import es.gonzo.springboot.league.app.entity.Bid;
 import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import io.zonky.test.db.flyway.OptimizedFlywayTestExecutionListener;
+import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,6 +25,8 @@ import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
+        OptimizedFlywayTestExecutionListener.class})
 @AutoConfigureEmbeddedDatabase
 public class SaleRepositoryTest {
 
@@ -31,6 +37,7 @@ public class SaleRepositoryTest {
     BidRepository bidRepository;
 
     @Test
+    @FlywayTest
     void shouldBeOneRecord_whenPutPlayerInSale() {
         var newSale = Sale.builder()
                 .idPlayer(UUID.randomUUID())
@@ -41,12 +48,16 @@ public class SaleRepositoryTest {
                 .status(TransactionStatus.PENDING)
                 .createdAt(LocalDate.now()).build();
 
-        saleRepository.save(newSale);
+        final Sale saleSaved = saleRepository.save(newSale);
 
         Assertions.assertEquals(1, saleRepository.count());
+
+        final Optional<Sale> changeOwnerOptional = saleRepository.findById(saleSaved.getId());
+        Assertions.assertNotNull(changeOwnerOptional.orElseThrow().getCreatedAt());
     }
 
     @Test
+    @FlywayTest
     void shouldBeOneBid_whenUserBidForOnePlayerInSales() {
 
         final UUID idPlayer = UUID.randomUUID();
@@ -77,10 +88,11 @@ public class SaleRepositoryTest {
 
         Assertions.assertEquals(1, bidRepository.count());
         final Optional<Sale> saleFoundedAgain = saleRepository.findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(idPlayer, idUserOwner, idCommunity, "2021/2022");
-        Assertions.assertEquals(1, saleFoundedAgain.get().getBids().size());
+        Assertions.assertEquals(1, saleFoundedAgain.orElseThrow().getBids().size());
     }
 
     @Test
+    @FlywayTest
     void shouldFetchListOfSale_whenUserHasMoreThanOnePlayersInSale() {
 
         final UUID idUserOwner = UUID.randomUUID();

@@ -2,7 +2,6 @@ package es.gonzo.springboot.league.app.services;
 
 import es.gonzo.springboot.league.app.dao.BidRepository;
 import es.gonzo.springboot.league.app.dao.SaleRepository;
-import es.gonzo.springboot.league.app.entity.Bid;
 import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -53,6 +52,6 @@ class BidServiceIntegrationTest {
 
         Assertions.assertEquals(1, service.fetchBidListByIdUserBidAndCommunityAndSeason(idUserBid, idCommunity, season).size());
         Assertions.assertNotNull(service.fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(idPlayer, idUserBid, idCommunity, season));
-        Assertions.assertEquals(1, saleRepository.findById(idSale).get().getBids().size());
+        Assertions.assertEquals(1, saleRepository.findById(idSale).orElseThrow().getBids().size());
     }
 }

@@ -1,7 +1,6 @@
 -- Use ordered UUID v1 (only v1 can be ordered sequentially), stored as BINARY(16) when the data is dynamically generated.
 -- For reference table, stick to auto-incremented primary keys since the values are static and won't change that much either.
 
-
 CREATE TABLE IF NOT EXISTS sale (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   season_id CHARACTER(9) NOT NULL,
@@ -31,6 +30,30 @@ CREATE TABLE IF NOT EXISTS bid (
 
   PRIMARY KEY (id),
   CONSTRAINT fk_sale FOREIGN KEY (sale_id) REFERENCES sale (id)
+);
+
+CREATE TABLE IF NOT EXISTS player_price (
+  player_id uuid,
+  season_id CHARACTER(9),
+  month SMALLINT,
+  price NUMERIC(6) NOT NULL,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (player_id, season_id, month)
+);
+
+CREATE TABLE IF NOT EXISTS change_owner (
+  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  player_id uuid NOT NULL,
+  user_last_owner_id uuid NOT NULL,
+  user_new_owner_id uuid NOT NULL,
+  community_id uuid NOT NULL,
+  change_date DATE NOT NULL DEFAULT CURRENT_DATE + 1,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (id)
 );
 
 CREATE TRIGGER t_sale

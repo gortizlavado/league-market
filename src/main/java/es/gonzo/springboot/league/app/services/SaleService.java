@@ -7,12 +7,12 @@ import java.util.UUID;
 
 public interface SaleService {
 
-    Sale fetchSaleByPlayerIdAndIdOwnerAndCommunityAndSeason(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId);
+    Sale fetchSalablePlayer(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId);
 
-    Set<Sale> fetchSaleListByIdOwnerAndCommunityAndSeason(UUID idUserOwner, UUID idCommunity, String seasonId);
+    Set<Sale> fetchListOfSalablePlayers(UUID idUserOwner, UUID idCommunity, String seasonId);
 
-    Set<Sale> fetchPendingSaleListByIdOwnerAndCommunityAndSeason(UUID idUserOwner, UUID idCommunity, String seasonId);
+    Set<Sale> fetchListOfSalablePendingPlayers(UUID idUserOwner, UUID idCommunity, String seasonId);
 
-    void acceptOneBidForPlayerFromUserSale(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId, UUID idUserBid);
+    void acceptOneOfferForPlayer(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId, UUID idUserBid);
 
 }
