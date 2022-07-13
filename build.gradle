@@ -7,6 +7,8 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'pmd'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'net.ltgt.apt-idea'
 
@@ -53,6 +55,21 @@ dependencies {
 	}
 }
 
+pmd {
+	ruleSets = ['category/java/bestpractices.xml', 'category/java/design.xml', 'category/java/performance.xml']
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.7
+			}
+		}
+	}
+}
+
 test {
 	useJUnitPlatform()
+	finalizedBy pmdMain, jacocoTestReport
 }
