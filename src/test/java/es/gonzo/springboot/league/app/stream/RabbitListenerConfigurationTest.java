@@ -1,6 +1,7 @@
 package es.gonzo.springboot.league.app.stream;
 
-import es.gonzo.springboot.league.app.models.BidRequest;
+import es.gonzo.springboot.league.app.Application;
+import es.gonzo.springboot.league.app.models.messaging.BidRequest;
 import es.gonzo.springboot.league.app.support.SupportRabbitTestConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +19,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@SpringBootTest(properties = {
+@SpringBootTest(classes = Application.class,
+        properties = {
         "cloud.stream.default.consumer.autoStartup=false" //TODO is it works?
 })
 @ExtendWith(SpringExtension.class)

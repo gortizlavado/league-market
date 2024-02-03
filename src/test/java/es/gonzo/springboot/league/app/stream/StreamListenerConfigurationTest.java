@@ -2,7 +2,7 @@ package es.gonzo.springboot.league.app.stream;
 
 import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.models.BidJoin;
-import es.gonzo.springboot.league.app.models.BidRequest;
+import es.gonzo.springboot.league.app.models.messaging.BidRequest;
 import es.gonzo.springboot.league.app.services.BidService;
 import es.gonzo.springboot.league.app.services.SaleService;
 import es.gonzo.springboot.league.app.support.SupportIntegrationTest;
@@ -18,6 +18,9 @@ import org.springframework.messaging.support.MessageBuilder;
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
+
+import static es.gonzo.springboot.league.app.config.stream.StreamListenerConfiguration.BID_SINK;
+import static es.gonzo.springboot.league.app.config.stream.StreamListenerConfiguration.ROUTING_EVENT_TYPE;
 
 @Import(TestChannelBinderConfiguration.class)
 class StreamListenerConfigurationTest extends SupportIntegrationTest {
@@ -44,9 +47,9 @@ class StreamListenerConfigurationTest extends SupportIntegrationTest {
                 .amount(BigDecimal.valueOf(350L));
 
         // WHEN
-        streamBridge.send("functionRouter-in-0",
+        streamBridge.send(BID_SINK,
                 MessageBuilder.withPayload(builder.build())
-                        .setHeader("event_type", "createConsumer")
+                        .setHeader(ROUTING_EVENT_TYPE, "createConsumer")
                         .build());
 
         // THEN
@@ -58,9 +61,9 @@ class StreamListenerConfigurationTest extends SupportIntegrationTest {
         Assertions.assertEquals(2, sale.getBids().size());
 
         // WHEN
-        streamBridge.send("functionRouter-in-0",
+        streamBridge.send(BID_SINK,
                 MessageBuilder.withPayload(builder.idBid(2L).build())
-                        .setHeader("event_type", "cancelConsumer")
+                        .setHeader(ROUTING_EVENT_TYPE, "cancelConsumer")
                         .build());
 
         // THEN

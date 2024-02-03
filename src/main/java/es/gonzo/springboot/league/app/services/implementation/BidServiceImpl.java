@@ -7,7 +7,7 @@ import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.exceptions.BidNotFoundException;
 import es.gonzo.springboot.league.app.exceptions.SaleNotFoundException;
 import es.gonzo.springboot.league.app.models.BidJoin;
-import es.gonzo.springboot.league.app.models.BidRequest;
+import es.gonzo.springboot.league.app.models.messaging.BidRequest;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import es.gonzo.springboot.league.app.services.BidService;
 import lombok.RequiredArgsConstructor;

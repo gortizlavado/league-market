@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface ChangeOwnerRepository extends CrudRepository<ChangeOwner, Long> {
 
     Iterable<ChangeOwner> findByIdCommunityAndChangeDateEquals(UUID idCommunity, LocalDate localDate);
+    Iterable<ChangeOwner> findByChangeDateEquals(LocalDate localDate);
 }

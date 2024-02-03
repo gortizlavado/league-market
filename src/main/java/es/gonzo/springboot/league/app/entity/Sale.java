@@ -4,7 +4,6 @@ import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,6 +37,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "sale")
 public class Sale {
+
+    //TODO id = id+idPlayer+IdCommunity
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

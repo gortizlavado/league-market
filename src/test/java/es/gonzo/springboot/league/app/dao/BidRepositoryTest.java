@@ -4,14 +4,11 @@ import es.gonzo.springboot.league.app.entity.Bid;
 import es.gonzo.springboot.league.app.entity.Sale;
 import es.gonzo.springboot.league.app.models.BidJoin;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import es.gonzo.springboot.league.app.support.SupportUnitTest;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,10 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-@AutoConfigureEmbeddedDatabase
-public class BidRepositoryTest {
+public class BidRepositoryTest extends SupportUnitTest {
 
     @Autowired
     SaleRepository saleRepository;

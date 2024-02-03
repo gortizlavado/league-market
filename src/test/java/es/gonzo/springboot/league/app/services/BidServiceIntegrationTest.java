@@ -3,7 +3,7 @@ package es.gonzo.springboot.league.app.services;
 import es.gonzo.springboot.league.app.dao.BidRepository;
 import es.gonzo.springboot.league.app.dao.SaleRepository;
 import es.gonzo.springboot.league.app.entity.Sale;
-import es.gonzo.springboot.league.app.models.BidRequest;
+import es.gonzo.springboot.league.app.models.messaging.BidRequest;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
 import es.gonzo.springboot.league.app.support.SupportIntegrationTest;
 import org.junit.jupiter.api.Assertions;

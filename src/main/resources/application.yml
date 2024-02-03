@@ -16,6 +16,11 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: none
+  batch:
+    job.enabled: false
+    jdbc:
+      table-prefix: ${spring.application.name}.BATCH_
+      initialize-schema: always
   flyway:
     baseline-on-migrate: true
     baseline-version: 0
@@ -33,6 +38,7 @@ spring:
       function:
         routing.enabled: true
       bindings:
+      # IN
         # <functionName> + -in- + <index>
         functionRouter-in-0:
           destination: executedBid
@@ -40,12 +46,20 @@ spring:
           content-type: application/json
           binder: rabbit
           # retryable-exceptions ??
+      # OUT
+        communityChannel-out-0:
+          destination: toCommunity
+          binder: rabbit
       rabbit.binding:
         functionRouter-in-0:
           consumer:
             autoBindDlq: true
             republishToDlq: true
             transacted: true
+        communityChannel-out-0:
+          producer:
+            transacted: true
+            routing-key-expression: headers.leagueRoutingKey
 
 feign:
   client:

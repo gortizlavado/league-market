@@ -1,7 +1,7 @@
 package es.gonzo.springboot.league.app.services;
 
 import es.gonzo.springboot.league.app.models.BidJoin;
-import es.gonzo.springboot.league.app.models.BidRequest;
+import es.gonzo.springboot.league.app.models.messaging.BidRequest;
 import org.springframework.messaging.Message;
 
 import java.util.Set;

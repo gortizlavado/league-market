@@ -1,16 +1,13 @@
 package es.gonzo.springboot.league.app.dao;
 
 import es.gonzo.springboot.league.app.entity.ChangeOwner;
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import es.gonzo.springboot.league.app.support.SupportUnitTest;
 import io.zonky.test.db.flyway.OptimizedFlywayTestExecutionListener;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import java.time.LocalDate;
@@ -18,12 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         OptimizedFlywayTestExecutionListener.class})
-@AutoConfigureEmbeddedDatabase
-class ChangeOwnerRepositoryTest {
+class ChangeOwnerRepositoryTest extends SupportUnitTest {
 
     @Autowired
     ChangeOwnerRepository repository;

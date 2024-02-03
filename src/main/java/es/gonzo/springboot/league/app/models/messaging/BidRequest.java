@@ -1,4 +1,4 @@
-package es.gonzo.springboot.league.app.models;
+package es.gonzo.springboot.league.app.models.messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

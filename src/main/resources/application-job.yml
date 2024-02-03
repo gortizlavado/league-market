@@ -1,0 +1,4 @@
+spring:
+  main.web-application-type: none
+  data.jpa.repositories.enabled: false
+  flyway.enabled: false

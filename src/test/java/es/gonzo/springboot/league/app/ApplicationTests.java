@@ -4,7 +4,7 @@ import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = Application.class)
 @AutoConfigureEmbeddedDatabase
 class ApplicationTests {
 
