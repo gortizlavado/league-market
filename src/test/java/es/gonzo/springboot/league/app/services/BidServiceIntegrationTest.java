@@ -3,23 +3,19 @@ package es.gonzo.springboot.league.app.services;
 import es.gonzo.springboot.league.app.dao.BidRepository;
 import es.gonzo.springboot.league.app.dao.SaleRepository;
 import es.gonzo.springboot.league.app.entity.Sale;
+import es.gonzo.springboot.league.app.models.BidRequest;
 import es.gonzo.springboot.league.app.models.enums.TransactionStatus;
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import es.gonzo.springboot.league.app.support.SupportIntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.messaging.support.MessageBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
-@AutoConfigureEmbeddedDatabase
-class BidServiceIntegrationTest {
+class BidServiceIntegrationTest extends SupportIntegrationTest {
 
     @Autowired
     BidService service;
@@ -48,7 +44,10 @@ class BidServiceIntegrationTest {
         final Sale saleSaved = saleRepository.save(newSale);
         final long idSale = saleSaved.getId();
 
-        service.createBidBy(idSale, idUserBid, BigDecimal.valueOf(350L));
+        service.createBidBy(MessageBuilder.withPayload(BidRequest.builder()
+                .idSale(idSale)
+                .idUserBid(idUserBid)
+                .amount(BigDecimal.valueOf(350L)).build()).build());
 
         Assertions.assertEquals(1, service.fetchBidListByIdUserBidAndCommunityAndSeason(idUserBid, idCommunity, season).size());
         Assertions.assertNotNull(service.fetchBidByPlayerIdAndIdUserBidAndCommunityAndSeason(idPlayer, idUserBid, idCommunity, season));

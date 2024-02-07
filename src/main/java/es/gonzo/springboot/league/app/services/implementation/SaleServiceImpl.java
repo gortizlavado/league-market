@@ -37,6 +37,15 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional(readOnly = true)
+    public Sale fetchSalablePlayer(UUID idPlayer, UUID idCommunity, String seasonId) {
+        return saleRepository
+                .findByIdPlayerAndIdCommunityAndSeason(
+                        idPlayer, idCommunity, seasonId)
+                .orElseThrow(() -> new SaleNotFoundException(idPlayer, idCommunity, seasonId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Set<Sale> fetchListOfSalablePlayers(
             UUID idUserOwner, UUID idCommunity, String seasonId) {
         return saleRepository.findByIdUserOwnerAndIdCommunityAndSeason(idUserOwner, idCommunity, seasonId);

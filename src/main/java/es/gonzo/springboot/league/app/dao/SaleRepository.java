@@ -17,6 +17,9 @@ public interface SaleRepository extends CrudRepository<Sale, Long> {
     Optional<Sale> findByIdPlayerAndIdUserOwnerAndIdCommunityAndSeason(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String season);
 
     @Transactional(readOnly = true)
+    Optional<Sale> findByIdPlayerAndIdCommunityAndSeason(UUID idPlayer, UUID idCommunity, String season);
+
+    @Transactional(readOnly = true)
     Set<Sale> findByIdUserOwnerAndIdCommunityAndSeason(UUID idUserOwner, UUID idCommunity, String season);
 
     @Transactional(readOnly = true)

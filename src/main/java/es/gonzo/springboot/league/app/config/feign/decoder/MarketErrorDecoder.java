@@ -1,4 +1,4 @@
-package es.gonzo.springboot.league.app.config.decoder;
+package es.gonzo.springboot.league.app.config.feign.decoder;
 
 import es.gonzo.springboot.league.app.exceptions.feign.BadRequestException;
 import es.gonzo.springboot.league.app.exceptions.feign.NotFoundException;

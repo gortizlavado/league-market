@@ -5,3 +5,8 @@ spring:
     init-sqls: CREATE SCHEMA IF NOT EXISTS "${spring.application.name}";
   jpa:
     properties.hibernate.jdbc.lob.non_contextual_creation: true
+
+  # Don't consume the message in the tests. WORKS??
+  rabbitmq:
+    listener:
+      simple.auto-startup: false

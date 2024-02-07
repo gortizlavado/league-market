@@ -1,8 +1,9 @@
 package es.gonzo.springboot.league.app.services;
 
 import es.gonzo.springboot.league.app.models.BidJoin;
+import es.gonzo.springboot.league.app.models.BidRequest;
+import org.springframework.messaging.Message;
 
-import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,5 +15,7 @@ public interface BidService {
 
     Set<BidJoin> fetchPendingBidListByIdUserBidAndCommunityAndSeason(UUID idUserBid, UUID idCommunity, String seasonId);
 
-    void createBidBy(Long idSale, UUID idUserBid, BigDecimal amount);
+    void createBidBy(Message<BidRequest> bidRequestMessage);
+
+    void cancelBidBy(Message<BidRequest> bidRequestMessage);
 }

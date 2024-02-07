@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/market")
 public class MarketController {
+ // Those endpoints are just for consulting, the request (to change something) should do for messaging.
 
     @Autowired
     SaleService saleService;

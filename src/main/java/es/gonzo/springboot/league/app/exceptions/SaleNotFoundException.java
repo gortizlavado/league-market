@@ -11,4 +11,8 @@ public class SaleNotFoundException extends RuntimeException {
     public SaleNotFoundException(UUID idPlayer, UUID idUserOwner, UUID idCommunity, String seasonId) {
         super(String.format("Sale for idPlayer=%s owner by idUserOwner=%s [idCommunity=%s and season=%s] not found", idPlayer, idUserOwner, idCommunity, seasonId));
     }
+
+    public SaleNotFoundException(UUID idPlayer, UUID idCommunity, String seasonId) {
+        super(String.format("Sale for idPlayer=%s [idCommunity=%s and season=%s] not found", idPlayer, idCommunity, seasonId));
+    }
 }

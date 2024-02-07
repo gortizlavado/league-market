@@ -7,4 +7,8 @@ public class BidNotFoundException extends RuntimeException {
     public BidNotFoundException(UUID idPlayer, UUID idUserBid, UUID idCommunity, String seasonId) {
         super(String.format("Bid for idPlayer=%s done by idUserBid=%s [idCommunity=%s and season=%s] not found", idPlayer, idUserBid, idCommunity, seasonId));
     }
+
+    public BidNotFoundException(Long idBid) {
+        super(String.format("Bid not found [idBid=%s]", idBid));
+    }
 }

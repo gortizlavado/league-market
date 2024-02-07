@@ -26,6 +26,27 @@ spring:
     user: sa
     password:
 
+  cloud:
+    function:
+      routing-expression: headers['event_type']
+    stream:
+      function:
+        routing.enabled: true
+      bindings:
+        # <functionName> + -in- + <index>
+        functionRouter-in-0:
+          destination: executedBid
+          group: ${spring.application.name}
+          content-type: application/json
+          binder: rabbit
+          # retryable-exceptions ??
+      rabbit.binding:
+        functionRouter-in-0:
+          consumer:
+            autoBindDlq: true
+            republishToDlq: true
+            transacted: true
+
 feign:
   client:
     config:

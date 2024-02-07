@@ -1,13 +1,13 @@
-package es.gonzo.springboot.league.app.config;
+package es.gonzo.springboot.league.app.config.feign;
 
-import es.gonzo.springboot.league.app.config.decoder.MarketErrorDecoder;
+import es.gonzo.springboot.league.app.config.feign.decoder.MarketErrorDecoder;
 import feign.Logger;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ClientConfiguration {
+public class FeignClientConfiguration {
 
     @Bean
     Logger.Level feignLoggerLevel() {
